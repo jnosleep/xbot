@@ -37,7 +37,7 @@ let redis: Redis
 const userIdToMentionDbMap: Record<string, Keyv<types.Tweet>> = {}
 
 if (config.redisUrl) {
-  const store = new KeyvRedis(config.redisUrl, {
+  const store = new KeyvRedis(config.redisUrl + '?family=0', {
     options: {
       tls: {
         rejectUnauthorized: false
