@@ -205,7 +205,7 @@ export async function convertTweetToEntityMap(
     }
   }
 
-  entityMap.urls = await enrichEntityUrls(Object.values(urls))
+  // entityMap.urls = await enrichEntityUrls(Object.values(urls))
   return entityMap
 }
 
@@ -304,48 +304,48 @@ export function convertTwitterUrlToEntity(url: types.TwitterUrl): URLEntity {
   }
 }
 
-export async function enrichEntityUrls(
-  urls: URLEntity[],
-  {
-    concurrency = 5
-  }: {
-    concurrency?: number
-  } = {}
-): Promise<Record<string, URLEntity>> {
-  const enrichedUrls: Record<string, URLEntity> = {}
+// export async function enrichEntityUrls(
+//   urls: URLEntity[],
+//   {
+//     concurrency = 5
+//   }: {
+//     concurrency?: number
+//   } = {}
+// ): Promise<Record<string, URLEntity>> {
+//   const enrichedUrls: Record<string, URLEntity> = {}
 
-  await pMap(
-    urls,
-    async (urlEntity) => {
-      if (urlEntity.mediaId) return
+//   await pMap(
+//     urls,
+//     async (urlEntity) => {
+//       if (urlEntity.mediaId) return
 
-      const scrapedUrl = await scrapeUrl(urlEntity.url)
-      if (!scrapedUrl) return
+//       const scrapedUrl = await scrapeUrl(urlEntity.url)
+//       if (!scrapedUrl) return
 
-      urlEntity.title = scrapedUrl.title
-      urlEntity.description = scrapedUrl.description
-      urlEntity.author = scrapedUrl.author
-      urlEntity.siteName = scrapedUrl.siteName
-      // urlEntity.markdownContent = scrapedUrl.markdownContent
+//       urlEntity.title = scrapedUrl.title
+//       urlEntity.description = scrapedUrl.description
+//       urlEntity.author = scrapedUrl.author
+//       urlEntity.siteName = scrapedUrl.siteName
+//       // urlEntity.markdownContent = scrapedUrl.markdownContent
 
-      enrichedUrls[urlEntity.url] = urlEntity
-    },
-    {
-      concurrency
-    }
-  )
+//       enrichedUrls[urlEntity.url] = urlEntity
+//     },
+//     {
+//       concurrency
+//     }
+//   )
 
-  return enrichedUrls
-}
+//   return enrichedUrls
+// }
 
-const scraperClient = new ScraperClient()
-export const scrapeUrl = pMemoize(scrapeUrlImpl)
+// const scraperClient = new ScraperClient()
+// export const scrapeUrl = pMemoize(scrapeUrlImpl)
 
-async function scrapeUrlImpl(url: string) {
-  try {
-    return await scraperClient.scrapeUrl(url)
-  } catch (err: any) {
-    console.log('error scraping url', url, err.message)
-    return null
-  }
-}
+// async function scrapeUrlImpl(url: string) {
+//   try {
+//     return await scraperClient.scrapeUrl(url)
+//   } catch (err: any) {
+//     console.log('error scraping url', url, err.message)
+//     return null
+//   }
+// }
