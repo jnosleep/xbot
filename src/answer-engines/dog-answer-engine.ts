@@ -12,7 +12,7 @@ export class DogAnswerEngine extends AnswerEngine {
     query: types.AnswerEngineQuery,
     _: types.AnswerEngineContext
   ): Promise<string> {
-    const resps = ['Bark bark!', 'Woof woof!', '🐶', '🦴']
+    const resps = ['arf!', 'woof!', 'ruff!']
     return Promise.resolve(
       resps[Math.floor(Math.random() * resps.length)] as string
     )
