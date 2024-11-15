@@ -64,7 +64,7 @@ const twitterApiRateLimitsByPlan: Record<
     // TODO: undocumented
     // 180 per 15m per user
     // 450 per 15m per app
-    usersIdMentions: { limit: 180, interval: FIFTEEN_MINUTES_MS },
+    usersIdMentions: { limit: 10, interval: FIFTEEN_MINUTES_MS },
 
     // 15 per 15m per user
     // 15 per 15m per app

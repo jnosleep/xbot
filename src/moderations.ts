@@ -30,6 +30,7 @@ export async function checkModeration(
   }
 
   const res = await ctx.openaiClient.moderations.create({
+    model: 'omni-moderation-latest',
     input
   })
 
