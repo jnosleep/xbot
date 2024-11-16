@@ -278,7 +278,7 @@ export async function respondToNewMentions(ctx: types.Context) {
             //       err2.toString()
             //     )
             //   }
-            }
+            // }
 
             return message
           }
