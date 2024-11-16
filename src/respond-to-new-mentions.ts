@@ -139,23 +139,23 @@ export async function respondToNewMentions(ctx: types.Context) {
           if (!bypassMessageResponseGeneration) {
             console.log('processing', getDebugMention(mention))
 
-            const promptModerationResult = await checkModeration(prompt, ctx)
-            if (promptModerationResult.flagged) {
-              const reason = Object.keys(promptModerationResult.categories)
-                .filter(
-                  (key: any) => (promptModerationResult.categories as any)[key]
-                )
-                .join(', ')
-              const error = new BotError(
-                `Error prompt flagged for moderation: ${reason}`,
-                {
-                  type: 'moderation',
-                  isFinal: true
-                }
-              )
-              console.error(error.toString(), prompt, promptModerationResult)
-              throw error
-            }
+            // const promptModerationResult = await checkModeration(prompt, ctx)
+            // if (promptModerationResult.flagged) {
+            //   const reason = Object.keys(promptModerationResult.categories)
+            //     .filter(
+            //       (key: any) => (promptModerationResult.categories as any)[key]
+            //     )
+            //     .join(', ')
+            //   const error = new BotError(
+            //     `Error prompt flagged for moderation: ${reason}`,
+            //     {
+            //       type: 'moderation',
+            //       isFinal: true
+            //     }
+            //   )
+            //   console.error(error.toString(), prompt, promptModerationResult)
+            //   throw error
+            // }
 
             const repliedToTweetRef = mention.referenced_tweets?.find(
               (t) => t.type === 'replied_to'
@@ -254,29 +254,30 @@ export async function respondToNewMentions(ctx: types.Context) {
               batch.hasTwitterAuthError = true
             } else if (err.type === 'twitter:rate-limit') {
               batch.hasTwitterRateLimitError = true
-            } else if (err.type === 'moderation') {
-              try {
-                if (!ctx.dryRun) {
-                  const tweet = await createTweet(
-                    {
-                      // NOTE: We're including the tweet id here, because the twitter API doesn't allow us to create multiple tweets with the same content, and this allows us to bypass that restriction.
-                      text: `Your tweet may violate our usage policy. ${err.toString()}\n\nRef: ${promptTweetId}`,
-                      reply: {
-                        in_reply_to_tweet_id: promptTweetId
-                      }
-                    },
-                    ctx
-                  )
+            }
+            // else if (err.type === 'moderation') {
+            //   try {
+            //     if (!ctx.dryRun) {
+            //       const tweet = await createTweet(
+            //         {
+            //           // NOTE: We're including the tweet id here, because the twitter API doesn't allow us to create multiple tweets with the same content, and this allows us to bypass that restriction.
+            //           text: `Your tweet may violate our usage policy. ${err.toString()}\n\nRef: ${promptTweetId}`,
+            //           reply: {
+            //             in_reply_to_tweet_id: promptTweetId
+            //           }
+            //         },
+            //         ctx
+            //       )
 
-                  setResponseTweet(tweet)
-                  await db.upsertMessage(message)
-                }
-              } catch (err2: any) {
-                console.warn(
-                  `warning: twitter error responding to tweet after ${err.type} error`,
-                  err2.toString()
-                )
-              }
+            //       setResponseTweet(tweet)
+            //       await db.upsertMessage(message)
+            //     }
+            //   } catch (err2: any) {
+            //     console.warn(
+            //       `warning: twitter error responding to tweet after ${err.type} error`,
+            //       err2.toString()
+            //     )
+            //   }
             }
 
             return message
